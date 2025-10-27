@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch API Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h2 {
+            color: #333;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #postButton {
+            background-color: #008CBA;
+        }
+        #postButton:hover {
+            background-color: #007399;
+        }
+        .output {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 15px;
+            background-color: white;
+            border-radius: 4px;
+            min-height: 50px;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+        strong {
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h2>🧪 Exploring the Fetch API</h2>
+    
+    <div>
+        <button id="loadData">Load Post Data (GET)</button>
+        <button id="postButton">Create New Post (POST)</button>
+    </div>
+    
+    <div id="output" class="output"></div>
+
+    <script>
+        // GET Request Implementation
+        document.getElementById("loadData").addEventListener("click", function() {
+            const output = document.getElementById("output");
+            output.innerHTML = "<em>Loading...</em>";
+
+            // Fetch API - GET request
+            fetch("https://jsonplaceholder.typicode.com/posts/1")
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    output.innerHTML = `
+                        <h3>📄 GET Request Result:</h3>
+                        <strong>Post Title:</strong> ${data.title}<br><br>
+                        <strong>Content:</strong> ${data.body}
+                    `;
+                })
+                .catch(error => {
+                    output.innerHTML = `<span class="error">Error: ${error.message}</span>`;
+                });
+        });
+
+        // POST Request Implementation
+        document.getElementById("postButton").addEventListener("click", function() {
+            const output = document.getElementById("output");
+            output.innerHTML = "<em>Sending data...</em>";
+
+            // Fetch API - POST request
+            fetch("https://jsonplaceholder.typicode.com/posts", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    title: "My New Post",
+                    body: "Learning Fetch API is fun!",
+                    userId: 1
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    output.innerHTML = `
+                        <h3 class="success">✅ POST Request Result:</h3>
+                        <strong>New Post Created!</strong><br><br>
+                        <strong>Post ID:</strong> ${data.id}<br>
+                        <strong>Title:</strong> ${data.title}<br>
+                        <strong>Body:</strong> ${data.body}<br>
+                        <strong>User ID:</strong> ${data.userId}
+                    `;
+                })
+                .catch(error => {
+                    output.innerHTML = `<span class="error">Error: ${error.message}</span>`;
+                });
+        });
+    </script>
+</body>
+</html>
